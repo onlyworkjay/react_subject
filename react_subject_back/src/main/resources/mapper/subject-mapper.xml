@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.iei.subject.model.dao.SubjectDao">
+
+ 	<select id="selectAllSubject" resultType="subject">
+ 		select
+ 			subject_no,
+	        subject_title,
+	        subject_instructor,
+	        subject_category,
+	        subject_level,
+	        subject_count 
+ 		from subject_tbl
+ 		order by
+	    <choose>
+	        <when test="order == 1">subject_no desc</when>
+	        <when test="order == 2">subject_level asc</when>
+	        <when test="order == 3">subject_level desc</when>
+	        <when test="order == 4">subject_count asc</when>
+	        <when test="order == 5">subject_count desc</when>
+	    </choose>
+ 	</select>
+ 	
+</mapper>
