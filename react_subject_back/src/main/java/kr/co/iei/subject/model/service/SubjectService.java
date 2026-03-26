@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import kr.co.iei.subject.model.dao.SubjectDao;
+import kr.co.iei.subject.model.vo.Search;
 import kr.co.iei.subject.model.vo.Subject;
 
 @Service
@@ -13,11 +15,9 @@ public class SubjectService {
 	@Autowired
 	private SubjectDao subjectDao;
 
-	public List<Subject> selectAllSubject(int order, String keyword, Integer category, Integer level) {
-		
-		return null;
+	public List<Subject> selectAllSubject(Search request) {
+		List<Subject> list = subjectDao.selectAllSubject(request);
+		return list;
 	}
-	
-	
 
 }

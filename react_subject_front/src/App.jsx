@@ -3,6 +3,10 @@ import styles from "./App.module.css";
 import axios from "axios";
 
 function App() {
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const handleSearch = () => {
+    setSearchKeyword(keyword);
+  };
   const [keyword, setKeyword] = useState("");
   const [category, setCategory] = useState(""); // 1: 프론트 엔드, 2: 백 엔드, 3: DB
   const [level, setLevel] = useState(""); // 1: 초급, 2: 중급, 3: 고급
@@ -12,19 +16,18 @@ function App() {
     setCategory("");
     setLevel("");
     setSort("1");
+    setSearchKeyword("");
   };
   const [subjects, setSubjects] = useState([]);
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_BACKSERVER}/subjects/subjectList`, {
-        params: {
-          order: Number(sort) || 1,
-          keyword,
-          category,
-          level,
-        },
+      .get(
+        `${import.meta.env.VITE_BACKSERVER}/subjects?keyword=${keyword}&level=${level}&category=${category}&sort=${sort}`,
+      )
+      .then((res) => {
+        console.log(res);
+        setSubjects(res.data);
       })
-      .then((res) => setSubjects(res.data))
       .catch((err) => console.log(err));
   }, [keyword, category, level, sort]);
   return (
@@ -39,8 +42,9 @@ function App() {
             type="text"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
+            placeholder="강의명 검색하기"
           />
-          <button type="button" className="btn primary">
+          <button type="button" onClick={handleSearch}>
             검색
           </button>
         </div>
@@ -76,8 +80,8 @@ function App() {
             <option value="1">작성순</option>
             <option value="2">난이도 오름차순</option>
             <option value="3">난이도 내림차순</option>
-            <option value="4">수강인원 오름차순</option>
-            <option value="5">수강인원 내림차순</option>
+            <option value="4">수강 정원 오름차순</option>
+            <option value="5">수강 정원 내림차순</option>
           </select>
 
           <button type="button" onClick={searchReset}>
@@ -100,13 +104,13 @@ function App() {
           </thead>
           <tbody>
             {subjects.map((subject, index) => (
-              <tr key={subject.subject_no}>
-                <td>{subject.subject_no}</td>
-                <td>{subject.subject_title}</td>
-                <td>{subject.subject_instructor}</td>
-                <td>{subject.subject_category}</td>
-                <td>{subject.subject_level}</td>
-                <td>{subject.subject_count}</td>
+              <tr key={index}>
+                <td>{subject.subjectNo}</td>
+                <td>{subject.subjectTitle}</td>
+                <td>{subject.subjectInstructor}</td>
+                <td>{subject.subjectCategory}</td>
+                <td>{subject.subjectLevel}</td>
+                <td>{subject.subjectCount}</td>
               </tr>
             ))}
           </tbody>
